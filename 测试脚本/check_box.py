@@ -10,5 +10,4 @@ inputs = driver.find_elements_by_tag_name("input")
 for input in  inputs:
     if input.get_attribute("type")=="radio":
         input.click()
-
 time.sleep(6)
