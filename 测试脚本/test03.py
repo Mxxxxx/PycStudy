@@ -3,8 +3,6 @@ import os
 import sys
 import time
 import unittest
-
-
 def creatsuit():
     discover = unittest.defaultTestLoader.discover("../测试脚本",pattern="testbaidu1.py",top_level_dir=None)
     print(discover)
