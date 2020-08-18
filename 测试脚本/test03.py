@@ -9,11 +9,9 @@ def creatsuit():
     discover = unittest.defaultTestLoader.discover("../测试脚本",pattern="testbaidu1.py",top_level_dir=None)
     print(discover)
     return discover
-
 if __name__ == "__main__":
     # 当前文件所在得到文件夹的绝对路径
     curpath =sys.path[0]
-
     if not os.path.exists(curpath+'/resultreport'):
         os.makedirs(curpath+'/resultreport')
 
