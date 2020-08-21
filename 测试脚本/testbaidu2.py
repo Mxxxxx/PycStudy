@@ -1,6 +1,8 @@
+import csv
 import os
+import sys
 
-from ddt import ddt, data
+from ddt import ddt, data, unpack, file_data
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -21,10 +23,31 @@ class Baidu1(unittest.TestCase):
         self.base_url = "http://www.baidu.com/"
         self.verificationErros = []
         self.accept_next_alert = True
-    # 数据驱动使用
-    @unittest.skip("skipping")
-    @data("你好","守望")
-    def test_baidusearch(self,value):
+
+    def getText(file_name):
+        rows = []
+        path = sys.path[0]
+        with open(path + '/data/' + file_name, 'rt') as f:
+            readers = csv.reader(f, delimiter=',', quotechar='|')
+            next(texts, None)
+            for row in readers:
+                temprows = []
+                for i in row:
+                    temprows.append(i)
+                rows.append(temprows)
+            return rows
+
+    # 数据驱动
+    # @data(["你好", u"你好_百度搜索"], ["守望", u"守望啊_百度"])
+    # @unpack
+
+    # @file_data读取json
+    # @file_data('testjson.json')
+
+    # 文件读取
+    @data(*getText('test_baidu.txt'))
+    @unpack
+    def test_baidusearch(self, value,value1):
         driver = self.driver
         driver.get(self.base_url + "/")
         driver.find_element_by_id("kw").clear()
@@ -32,9 +55,9 @@ class Baidu1(unittest.TestCase):
         driver.find_element_by_id("su").click()
 
         # 断言测试
-        # time.sleep(6)
+        time.sleep(6)
         # try:
-        #     self.assertEqual("守望先锋_百度",driver.title,msg="网页未打开")
+        self.assertEqual( driver.title,value1, msg="内容不一致")
         # except:
         #     self.savescreenshot(driver,"baiduerror.png")
         time.sleep(3)
@@ -48,15 +71,15 @@ class Baidu1(unittest.TestCase):
         try:
             self.assertEqual(u"hao123_上网从这里开始码", driver.title)
         except:
-            self.savescreenshot(driver,"hao123Error.png")
+            self.savescreenshot(driver, "hao123Error.png")
         time.sleep(6)
         driver.quit()
 
     def savescreenshot(self, driver, file_name):
         if not os.path.exists('./errorImage'):
             os.makedirs("./errorImage")
-        now=time.strftime("%Y%m%d-%H%M%S",time.localtime(time.time()))
-        driver.get_screenshot_as_file("./errorImage/"+now+file_name)
+        now = time.strftime("%Y%m%d-%H%M%S", time.localtime(time.time()))
+        driver.get_screenshot_as_file("./errorImage/" + now + file_name)
         time.sleep(3)
 
 
